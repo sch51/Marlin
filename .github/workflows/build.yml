@@ -1,14 +1,10 @@
 name: Build Marlin
 on: [push, workflow_dispatch]
-permissions:
-  contents: write
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
@@ -17,15 +13,6 @@ jobs:
         run: pip install platformio
       - name: Build Firmware
         run: pio run -e STM32F103RE_creality_maple
-      - name: Commit auto-fixed configs
-        if: failure()
-        run: |
-          git config --global user.name 'GitHub Action'
-          git config --global user.email 'action@github.com'
-          git add Marlin/Configuration.h Marlin/Configuration_adv.h
-          git commit -m "Auto-fix configuration files by Marlin" || echo "No changes"
-          git pull --rebase origin ${{ github.ref_name }}
-          git push origin HEAD:${{ github.ref_name }}
       - name: Upload Firmware
         if: success()
         uses: actions/upload-artifact@v4
