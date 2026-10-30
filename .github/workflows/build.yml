@@ -13,8 +13,8 @@ jobs:
         run: |
           sed -i 's/EITHER(/ANY(/g' Marlin/Configuration.h Marlin/Configuration_adv.h
           sed -i 's/BOTH(/ALL(/g' Marlin/Configuration.h Marlin/Configuration_adv.h
-          sed -i 's/#define \(.*\)_ENDSTOP_INVERTING false/#define \1_ENDSTOP_HIT_STATE HIGH/g' Marlin/Configuration.h
-          sed -i 's/#define \(.*\)_ENDSTOP_INVERTING true/#define \1_ENDSTOP_HIT_STATE LOW/g' Marlin/Configuration.h
+          sed -i 's|#define SHOW_CUSTOM_BOOTSCREEN|//#define SHOW_CUSTOM_BOOTSCREEN|g' Marlin/Configuration.h
+          sed -i 's|#define CUSTOM_STATUS_SCREEN_IMAGE|//#define CUSTOM_STATUS_SCREEN_IMAGE|g' Marlin/Configuration_adv.h
       - name: Install PlatformIO
         run: pip install platformio
       - name: Build Firmware
