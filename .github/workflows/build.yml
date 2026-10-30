@@ -10,26 +10,25 @@ jobs:
         with:
           python-version: '3.11'
           
-      - name: Auto-fix Marlin configs (Python)
+      - name: Auto-fix Marlin configs
         run: |
           python -c "
           import re
-          file = 'Marlin/Configuration.h'
-          with open(file, 'r', encoding='utf-8') as f:
-              content = f.read()
-          # Force disable EEPROM to break the boot loop
-          content = re.sub(r'^\s*#define\s+EEPROM_SETTINGS', '//#define EEPROM_SETTINGS', content, flags=re.MULTILINE)
-          # Comment out bootscreen just in case
-          content = re.sub(r'^\s*#define\s+SHOW_CUSTOM_BOOTSCREEN', '//#define SHOW_CUSTOM_BOOTSCREEN', content, flags=re.MULTILINE)
-          with open(file, 'w', encoding='utf-8') as f:
-              f.write(content)
+          for file in ['Marlin/Configuration.h', 'Marlin/Configuration_adv.h']:
+              with open(file, 'r', encoding='utf-8') as f:
+                  content = f.read()
               
-          file_adv = 'Marlin/Configuration_adv.h'
-          with open(file_adv, 'r', encoding='utf-8') as f:
-              content_adv = f.read()
-          content_adv = re.sub(r'^\s*#define\s+CUSTOM_STATUS_SCREEN_IMAGE', '//#define CUSTOM_STATUS_SCREEN_IMAGE', content_adv, flags=re.MULTILINE)
-          with open(file_adv, 'w', encoding='utf-8') as f:
-              f.write(content_adv)
+              # Force comment out boot screen
+              content = re.sub(r'^\s*#define\s+SHOW_CUSTOM_BOOTSCREEN', '//#define SHOW_CUSTOM_BOOTSCREEN', content, flags=re.MULTILINE)
+              
+              # Force comment out status screen
+              content = re.sub(r'^\s*#define\s+CUSTOM_STATUS_SCREEN_IMAGE', '//#define CUSTOM_STATUS_SCREEN_IMAGE', content, flags=re.MULTILINE)
+              
+              # Force disable EEPROM to break the boot loop
+              content = re.sub(r'^\s*#define\s+EEPROM_SETTINGS', '//#define EEPROM_SETTINGS', content, flags=re.MULTILINE)
+              
+              with open(file, 'w', encoding='utf-8') as f:
+                  f.write(content)
           "
           
       - name: Install PlatformIO
