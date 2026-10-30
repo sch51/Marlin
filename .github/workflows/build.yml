@@ -9,6 +9,10 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+      - name: Auto-fix old Marlin macros
+        run: |
+          sed -i 's/EITHER(/ANY(/g' Marlin/Configuration.h Marlin/Configuration_adv.h
+          sed -i 's/BOTH(/ALL(/g' Marlin/Configuration.h Marlin/Configuration_adv.h
       - name: Install PlatformIO
         run: pip install platformio
       - name: Build Firmware
