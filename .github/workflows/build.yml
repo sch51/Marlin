@@ -18,18 +18,12 @@ jobs:
               with open(file, 'r', encoding='utf-8') as f:
                   content = f.read()
               
-              # Force comment out boot screen
+              # Принудительно отключаем кастомные экраны, чтобы не искать картинки
               content = re.sub(r'^\s*#define\s+SHOW_CUSTOM_BOOTSCREEN', '//#define SHOW_CUSTOM_BOOTSCREEN', content, flags=re.MULTILINE)
-              
-              # Force comment out status screen
               content = re.sub(r'^\s*#define\s+CUSTOM_STATUS_SCREEN_IMAGE', '//#define CUSTOM_STATUS_SCREEN_IMAGE', content, flags=re.MULTILINE)
               
-              # Force disable EEPROM to break the boot loop
+              # Принудительно отключаем EEPROM, чтобы не было цикла загрузки
               content = re.sub(r'^\s*#define\s+EEPROM_SETTINGS', '//#define EEPROM_SETTINGS', content, flags=re.MULTILINE)
-              
-              # Fix old macros
-              content = content.replace('EITHER(', 'ANY(')
-              content = content.replace('BOTH(', 'ALL(')
               
               with open(file, 'w', encoding='utf-8') as f:
                   f.write(content)
@@ -39,11 +33,11 @@ jobs:
         run: pip install platformio
         
       - name: Build Firmware
-        run: pio run -e GD32F303RE_creality_mfl
+        run: pio run -e STM32F103RE_creality
         
       - name: Upload Firmware
         if: success()
         uses: actions/upload-artifact@v4
         with:
           name: firmware
-          path: .pio/build/GD32F303RE_creality_mfl/firmware-*.bin
+          path: .pio/build/STM32F103RE_creality/firmware-*.bin
