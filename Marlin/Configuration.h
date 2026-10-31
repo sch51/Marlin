@@ -3867,3 +3867,6 @@
 
 // Disable servo with M282 to reduce power consumption, noise, and heat when not in use
 //#define SERVO_DETACH_GCODE
+#define BTN_EN1 PA3
+#define BTN_EN2 PA1
+#define BTN_ENC PA2
